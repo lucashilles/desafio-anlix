@@ -13,9 +13,9 @@ Os arquivos texto localizados no diretório dados apresentam diversas caracterí
 
 Além disso, precisamos que algumas informações estejam disponíveis em uma interface web. É importante ressaltar que o diretor do hospital necessita exibir essa interface para todos os investidores da instituição e também para o corpo de médicos. Os requisitos são os seguintes:
 
-* [ ] Buscar um paciente por nome e exibir o valor mais recente de cada uma de suas características;
-* [ ] Ser possível exportar as características de um ou mais pacientes de todas as datas disponíveis para um arquivo CSV;
-* [ ] Exibir um gráfico temporal para um determinado paciente e uma determinada característica a ser inserida através da interface.
+* [X] Buscar um paciente por nome e exibir o valor mais recente de cada uma de suas características;
+* [X] Ser possível exportar as características de um ou mais pacientes de todas as datas disponíveis para um arquivo CSV;
+* [X] Exibir um gráfico temporal para um determinado paciente e uma determinada característica a ser inserida através da interface.
 
 **Observações**
 
