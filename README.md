@@ -9,7 +9,7 @@ Os arquivos texto localizados no diretório dados apresentam diversas caracterí
 * [X] Consultar para uma determinada data (dia, mês e ano), todas as características existentes de todos os pacientes da base de dados;
 * [ ] Consultar uma característica qualquer de um paciente para um intervalo de datas a ser especificado na chamada da API;
 * [ ] Consultar o valor mais recente de uma característica de um paciente que esteja entre um intervalo de valores a ser especificado na chamada da API;
-* [ ] Consultar pacientes que contenham um nome ou parte de um nome a ser especificado na chamada da API.
+* [X] Consultar pacientes que contenham um nome ou parte de um nome a ser especificado na chamada da API.
 
 Além disso, precisamos que algumas informações estejam disponíveis em uma interface web. É importante ressaltar que o diretor do hospital necessita exibir essa interface para todos os investidores da instituição e também para o corpo de médicos. Os requisitos são os seguintes:
 
