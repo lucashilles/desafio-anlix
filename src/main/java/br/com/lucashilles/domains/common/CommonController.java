@@ -28,8 +28,8 @@ public class CommonController {
     public ObjectNode totals() {
         long patientCount = Patient.count();
         long readingTypeCount = ReadingType.count();
-        long cardiacReadingCount = Reading.count("reading_type_id", "1");
-        long pulmonaryReadingCount = Reading.count("reading_type_id", "2");
+        long cardiacReadingCount = Reading.count("reading_type_id", 1);
+        long pulmonaryReadingCount = Reading.count("reading_type_id", 2);
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode totalsJson = mapper.createObjectNode();
