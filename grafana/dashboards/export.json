@@ -24,8 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
-  "iteration": 1653776181516,
+  "iteration": 1654374589152,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -87,7 +86,7 @@
     {
       "datasource": {
         "type": "postgres",
-        "uid": "Postgres"
+        "uid": "P44368ADAD746BC27"
       },
       "description": "",
       "fieldConfig": {
@@ -98,6 +97,7 @@
           "custom": {
             "align": "auto",
             "displayMode": "auto",
+            "filterable": false,
             "inspect": false
           },
           "mappings": [],
@@ -145,7 +145,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  id,\n  date,\n  patient_id,\n  reading_type_id,\n  value\nFROM sys_reading\nWHERE patient_id in($idPacientes)\n  and reading_type_id in($idTipos)\nORDER BY date DESC",
+          "rawSql": "SELECT\n  r.id,\n  r.\"date\",\n  r.patient_id,\n  r.reading_type_id,\n  r.value\nFROM sys_reading r\nJOIN sys_patient p ON r.patient_id = p.id\nJOIN sys_reading_type rt ON r.reading_type_id = rt.id\nWHERE p.name in($Pacientes)\n  and rt.name in($Tipos)\nORDER BY date DESC",
           "refId": "A",
           "select": [
             [
@@ -206,10 +206,18 @@
         "current": {
           "selected": true,
           "text": [
-            "Alexandre Caleb Costa"
+            "Alexandre Caleb Costa",
+            "André Gael Souza",
+            "Benedita Mirella Aurora Alves",
+            "Anthony Caio Hugo da Costa",
+            "Agatha Bruna da Rosa"
           ],
           "value": [
-            "Alexandre Caleb Costa"
+            "Alexandre Caleb Costa",
+            "André Gael Souza",
+            "Benedita Mirella Aurora Alves",
+            "Anthony Caio Hugo da Costa",
+            "Agatha Bruna da Rosa"
           ]
         },
         "datasource": {
@@ -233,12 +241,10 @@
         "current": {
           "selected": true,
           "text": [
-            "Índice Cardíaco",
-            "Índice Pulmonar"
+            "Índice Cardíaco"
           ],
           "value": [
-            "Índice Cardíaco",
-            "Índice Pulmonar"
+            "Índice Cardíaco"
           ]
         },
         "datasource": {
@@ -258,52 +264,6 @@
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "3",
-          "value": "3"
-        },
-        "datasource": {
-          "type": "postgres",
-          "uid": "Postgres"
-        },
-        "definition": "SELECT id\nFROM sys_patient\nWHERE name in($Pacientes)",
-        "hide": 2,
-        "includeAll": false,
-        "multi": false,
-        "name": "idPacientes",
-        "options": [],
-        "query": "SELECT id\nFROM sys_patient\nWHERE name in($Pacientes)",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "1",
-          "value": "1"
-        },
-        "datasource": {
-          "type": "postgres",
-          "uid": "Postgres"
-        },
-        "definition": "SELECT id\nFROM sys_reading_type\nWHERE name in($Tipos)",
-        "hide": 2,
-        "includeAll": false,
-        "multi": false,
-        "name": "idTipos",
-        "options": [],
-        "query": "SELECT id\nFROM sys_reading_type\nWHERE name in($Tipos)",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
       }
     ]
   },
@@ -317,6 +277,6 @@
   "timezone": "",
   "title": "Exportação",
   "uid": "f1f1mDrnz",
-  "version": 3,
+  "version": 1,
   "weekStart": ""
 }
