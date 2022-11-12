@@ -1,6 +1,7 @@
 package br.com.lucashilles.domains.patient;
 
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -43,9 +44,9 @@ public class PatientController {
     }
 
     @GET
-    @Path("/find/{name}")
+    @Path("/find")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Patient> findPatient(@PathParam String name) {
+    public List<Patient> findPatient(@QueryParam String name) {
         return Patient.list("LOWER(name) LIKE ?1", "%" + name.toLowerCase() + "%");
     }
 
