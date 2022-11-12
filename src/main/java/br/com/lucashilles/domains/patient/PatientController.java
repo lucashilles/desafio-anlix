@@ -2,14 +2,38 @@ package br.com.lucashilles.domains.patient;
 
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/patient")
 public class PatientController {
+
+    @Inject
+    PatientService patientService;
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Patient createPatient(Patient newPatient) {
+        return patientService.createPatient(newPatient);
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Patient updatePatient(Patient patient) {
+        return patientService.updatePatient(patient);
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public void deleteById(@PathParam long id) {
+        patientService.deletePatient(id);
+    }
 
     @GET
     @Path("/{id}")
@@ -19,9 +43,9 @@ public class PatientController {
     }
 
     @GET
-    @Path("/search/{name}")
+    @Path("/find/{name}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Patient> getLastReadings(@PathParam String name) {
+    public List<Patient> findPatient(@PathParam String name) {
         return Patient.list("LOWER(name) LIKE ?1", "%" + name.toLowerCase() + "%");
     }
 
