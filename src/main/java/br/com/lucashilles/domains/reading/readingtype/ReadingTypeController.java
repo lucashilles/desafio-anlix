@@ -6,44 +6,53 @@ import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/reading_type")
+@Path("/reading-type")
 public class ReadingTypeController {
 
     @Inject
     ReadingTypeService readingTypeService;
 
+    @DELETE
+    @Path("/{id}")
     @Transactional
-    @POST
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
-    public ReadingType createReadingType(JsonObject body) {
-        return readingTypeService.createReadingType(body.getString("name"));
+    public void deleteReadingType(@PathParam long id) {
+        readingTypeService.deleteReadingType(id);
     }
 
-    @GET
+    @POST
     @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
-    public ReadingType getByName(JsonObject body) {
-        return ReadingType.find("name", body.getString("name")).firstResult();
+    @Transactional
+    public ReadingType createReadingType(ReadingType newReadingType) {
+        return readingTypeService.createReadingType(newReadingType);
+    }
+
+    @POST
+    @Path("/")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Transactional
+    public ReadingType createReadingTypeByName(String name) {
+        return readingTypeService.createReadingTypeByName(name);
+    }
+
+    @PUT
+    @Path("/")
+    @Transactional
+    public ReadingType updateReadingType(ReadingType readingType) {
+        return readingTypeService.updateReadingType(readingType);
     }
 
     @GET
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public ReadingType getById(@PathParam long id) {
         return ReadingType.findById(id);
     }
 
     @GET
     @Path("/all")
-    @Produces(MediaType.APPLICATION_JSON)
     public List<ReadingType> getAll() {
         return ReadingType.findAll().list();
     }
