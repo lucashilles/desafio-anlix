@@ -1,17 +1,19 @@
 package br.com.lucashilles.domains.patient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.Date;
 
 @Entity
 @Table(name = "sys_patient")
-public class Patient extends PanacheEntity {
+public class Patient extends PanacheEntityBase {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
 
     @JsonProperty("nome")
     public String name;

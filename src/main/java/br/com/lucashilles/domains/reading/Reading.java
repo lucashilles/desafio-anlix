@@ -2,17 +2,18 @@ package br.com.lucashilles.domains.reading;
 
 import br.com.lucashilles.domains.patient.Patient;
 import br.com.lucashilles.domains.reading.readingtype.ReadingType;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "sys_reading")
-public class Reading extends PanacheEntity {
+public class Reading extends PanacheEntityBase {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
@@ -22,8 +23,11 @@ public class Reading extends PanacheEntity {
     @JoinColumn(name = "reading_type_id")
     public ReadingType readingType;
 
+    @Column(nullable = false,
+            columnDefinition = "timestamp with time zone not null")
     public Date date;
 
+    @Column(nullable = false)
     public double value;
 
     public Patient getPatient() {
