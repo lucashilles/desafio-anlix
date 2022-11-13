@@ -20,7 +20,7 @@ public class ReadingController {
     @Path("/{id}")
     @Transactional
     public void deleteReading(@PathParam long id) {
-        readingService.deleteReading(id);
+        readingService.delete(id);
     }
 
     @GET
@@ -39,14 +39,14 @@ public class ReadingController {
 
     @POST
     @Transactional
-    public Reading createReading(Reading reading) {
-        return readingService.createReading(reading);
+    public Reading createReading(ReadingDto reading) {
+        return readingService.create(reading.toEntity());
     }
 
     @PUT
     @Transactional
     public Reading updateReading(Reading reading) {
-        return readingService.updateReading(reading);
+        return readingService.update(reading);
     }
 
     @GET

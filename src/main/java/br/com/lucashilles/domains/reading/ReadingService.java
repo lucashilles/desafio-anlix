@@ -12,19 +12,19 @@ public class ReadingService {
     @Inject
     Session session;
 
-    public Reading createReading(Reading reading) {
-        reading.persist();
+    public Reading create(Reading reading) {
+        Reading.persist(reading);
         return reading;
     }
 
-    public void deleteReading(long id) {
+    public void delete(long id) {
         Reading reading = Reading.findById(id);
         if (reading != null) {
             reading.delete();
         }
     }
 
-    public Reading updateReading(Reading reading) {
+    public Reading update(Reading reading) {
         reading.persist();
         return reading;
     }
