@@ -29,12 +29,12 @@ public class ReadingService {
         return reading;
     }
 
-    public List<ReadingDto> getAllByDate(String date) {
+    public List<ReadingProjection> getAllByDate(String date) {
         String query = "DATE(date) = DATE(?1)";
-        return Reading.find(query, date).project(ReadingDto.class).list();
+        return Reading.find(query, date).project(ReadingProjection.class).list();
     }
 
-    public List<ReadingDto> getAllLatest() {
+    public List<ReadingProjection> getAllLatest() {
         String query = "SELECT r.*" +
                 "FROM sys_reading r" +
                 "JOIN (" +
@@ -46,10 +46,10 @@ public class ReadingService {
                 "AND r.reading_type_id = f.reading_type_id" +
                 "AND r.patient_id = f.patient_id;";
 
-        return session.createNativeQuery(query, ReadingDto.class).list();
+        return session.createNativeQuery(query, ReadingProjection.class).list();
     }
 
-    public List<ReadingDto> getAllLatestByPatient(Long patientId) {
+    public List<ReadingProjection> getAllLatestByPatient(Long patientId) {
         String query = "SELECT r.*" +
                 "FROM sys_reading r" +
                 "JOIN (" +
@@ -61,10 +61,10 @@ public class ReadingService {
                 "ON r.date = f.date" +
                 "AND r.reading_type_id = f.reading_type_id;";
 
-        return session.createNativeQuery(query, ReadingDto.class).setParameter("patientId", patientId).list();
+        return session.createNativeQuery(query, ReadingProjection.class).setParameter("patientId", patientId).list();
     }
 
-    public List<ReadingDto> getAllLatestByType(Long readingTypeId) {
+    public List<ReadingProjection> getAllLatestByType(Long readingTypeId) {
         String query = "SELECT r.*" +
                 "FROM sys_reading r" +
                 "JOIN (" +
@@ -77,10 +77,10 @@ public class ReadingService {
                 "AND r.reading_type_id = f.reading_type_id" +
                 "AND r.patient_id = f.patient_id;";
 
-        return session.createNativeQuery(query, ReadingDto.class).setParameter("readingTypeId", readingTypeId).list();
+        return session.createNativeQuery(query, ReadingProjection.class).setParameter("readingTypeId", readingTypeId).list();
     }
 
-    public List<ReadingDto> getLatestByPatientAndType(Long patientId, Long readingTypeId) {
+    public List<ReadingProjection> getLatestByPatientAndType(Long patientId, Long readingTypeId) {
         String query = "SELECT r.*" +
                 "FROM sys_reading r" +
                 "JOIN (" +
@@ -94,7 +94,7 @@ public class ReadingService {
                 "AND r.reading_type_id = f.reading_type_id" +
                 "AND r.patient_id = f.patient_id;";
 
-        return session.createNativeQuery(query, ReadingDto.class)
+        return session.createNativeQuery(query, ReadingProjection.class)
                 .setParameter("patientId", patientId)
                 .setParameter("readingTypeId", readingTypeId)
                 .list();

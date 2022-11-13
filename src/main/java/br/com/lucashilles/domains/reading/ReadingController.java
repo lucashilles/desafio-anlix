@@ -24,7 +24,7 @@ public class ReadingController {
     }
 
     @GET
-    public List<ReadingDto> getReadings (
+    public List<ReadingProjection> getReadings (
             @QueryParam Long patient,
             @QueryParam("reading-type") Long readingType,
             @QueryParam String from,
@@ -39,7 +39,7 @@ public class ReadingController {
 
     @POST
     @Transactional
-    public Reading createReading(ReadingDto reading) {
+    public Reading createReading(ReadingProjection reading) {
         return readingService.create(reading.toEntity());
     }
 
@@ -57,13 +57,13 @@ public class ReadingController {
 
     @GET
     @Path("/all")
-    public List<ReadingDto> getAllByDate(@QueryParam String date) {
+    public List<ReadingProjection> getAllByDate(@QueryParam String date) {
         return readingService.getAllByDate(date);
     }
 
     @GET
     @Path("/latest")
-    public List<ReadingDto> getLatest(@QueryParam Long patient, @QueryParam("reading-type") Long readingType) {
+    public List<ReadingProjection> getLatest(@QueryParam Long patient, @QueryParam("reading-type") Long readingType) {
         if (patient == null && readingType == null) {
             return readingService.getAllLatest();
         } if (readingType == null) {
