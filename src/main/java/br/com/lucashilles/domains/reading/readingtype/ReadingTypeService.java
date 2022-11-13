@@ -5,28 +5,29 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ReadingTypeService {
 
-    public ReadingType createReadingType(ReadingType readingType) {
+    public ReadingType create(ReadingType readingType) {
         readingType.persist();
         return readingType;
     }
 
-    public ReadingType createReadingTypeByName(String name) {
+    public ReadingType create(String name) {
         ReadingType readingType = new ReadingType();
         readingType.name = name;
-        return createReadingType(readingType);
+
+        return create(readingType);
     }
 
-    public void deleteReadingType(long id) {
+    public void delete(long id) {
         ReadingType readingType = ReadingType.findById(id);
         if (readingType != null) {
             readingType.delete();
         }
     }
 
-    public ReadingType updateReadingType(ReadingType readingType) {
+    public ReadingType update(ReadingType readingType) {
         if (ReadingType.findById(readingType.id) == null) {
             readingType.id = null;
-            return createReadingType(readingType);
+            return create(readingType);
         }
 
         return ReadingType.getEntityManager().merge(readingType);

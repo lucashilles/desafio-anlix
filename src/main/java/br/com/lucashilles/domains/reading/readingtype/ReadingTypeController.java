@@ -1,7 +1,6 @@
 package br.com.lucashilles.domains.reading.readingtype;
 
 
-import io.vertx.core.json.JsonObject;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.inject.Inject;
@@ -11,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/reading-type")
+@Produces(MediaType.APPLICATION_JSON)
 public class ReadingTypeController {
 
     @Inject
@@ -20,14 +20,15 @@ public class ReadingTypeController {
     @Path("/{id}")
     @Transactional
     public void deleteReadingType(@PathParam long id) {
-        readingTypeService.deleteReadingType(id);
+        readingTypeService.delete(id);
     }
 
     @POST
     @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public ReadingType createReadingType(ReadingType newReadingType) {
-        return readingTypeService.createReadingType(newReadingType);
+        return readingTypeService.create(newReadingType);
     }
 
     @POST
@@ -35,14 +36,15 @@ public class ReadingTypeController {
     @Consumes(MediaType.TEXT_PLAIN)
     @Transactional
     public ReadingType createReadingTypeByName(String name) {
-        return readingTypeService.createReadingTypeByName(name);
+        return readingTypeService.create(name);
     }
 
     @PUT
     @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public ReadingType updateReadingType(ReadingType readingType) {
-        return readingTypeService.updateReadingType(readingType);
+        return readingTypeService.update(readingType);
     }
 
     @GET
