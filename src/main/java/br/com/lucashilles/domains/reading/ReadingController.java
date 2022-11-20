@@ -7,7 +7,10 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/reading")
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,51 +30,75 @@ public class ReadingController {
     public List<ReadingProjection> getReadings (
             @QueryParam Long patient,
             @QueryParam("reading-type") Long readingType,
-            @QueryParam String from,
-            @QueryParam String to,
-            @QueryParam String date
+            @QueryParam("from-date")  Date fromDate,
+            @QueryParam("to-date")  Date toDate,
+            @QueryParam Date date
     ) throws Exception {
-        if (date != null && (from != null || to != null)) {
+        if (date != null && (fromDate != null || toDate != null)) {
             throw new Exception("Date can only be use alone");
         }
-        return null;
+        HashMap<String, Object> parameters = new HashMap<>();
+
+        if (patient != null) {
+            parameters.put("patient", patient);
+        }
+
+        if (readingType != null) {
+            parameters.put("reading_type", readingType);
+        }
+
+        if (fromDate != null) {
+            parameters.put("from_date", fromDate);
+        }
+
+        if (toDate != null) {
+            parameters.put("to_date", toDate);
+        }
+
+        if (date != null) {
+            parameters.put("date", date);
+        }
+
+        List<Reading> readings = readingService.getWithParams(parameters);
+        return readings.stream().map(ReadingProjection::new).collect(Collectors.toList());
     }
 
     @POST
     @Transactional
-    public Reading createReading(ReadingProjection reading) {
-        return readingService.create(reading.toEntity());
+    public ReadingProjection createReading(ReadingProjection newReading) {
+        Reading reading = readingService.create(newReading.toEntity());
+        return new ReadingProjection(reading);
     }
 
     @PUT
     @Transactional
-    public Reading updateReading(Reading reading) {
-        return readingService.update(reading);
+    public ReadingProjection updateReading(Reading modifiedReading) {
+        Reading reading = readingService.update(modifiedReading);
+        return new ReadingProjection(reading);
     }
 
     @GET
     @Path("/{id}")
-    public Reading getById(@PathParam long id) {
-        return Reading.findById(id);
-    }
-
-    @GET
-    @Path("/all")
-    public List<ReadingProjection> getAllByDate(@QueryParam String date) {
-        return readingService.getAllByDate(date);
+    public ReadingProjection getById(@PathParam long id) {
+        Reading reading = Reading.findById(id);
+        return new ReadingProjection(reading);
     }
 
     @GET
     @Path("/latest")
     public List<ReadingProjection> getLatest(@QueryParam Long patient, @QueryParam("reading-type") Long readingType) {
         if (patient == null && readingType == null) {
-            return readingService.getAllLatest();
+            List<Reading> allLatest = readingService.getAllLatest();
+            return allLatest.stream().map(ReadingProjection::new).collect(Collectors.toList());
         } if (readingType == null) {
-            return readingService.getAllLatestByPatient(patient);
+            List<Reading> allLatestByPatient = readingService.getAllLatestByPatient(patient);
+            return allLatestByPatient.stream().map(ReadingProjection::new).collect(Collectors.toList());
         } if (patient == null) {
-            return readingService.getAllLatestByType(readingType);
+            List<Reading> allLatestByType = readingService.getAllLatestByType(readingType);
+            return allLatestByType.stream().map(ReadingProjection::new).collect(Collectors.toList());
         }
 
-        return readingService.getLatestByPatientAndType(patient, readingType);
+        List<Reading> latestByPatientAndType = readingService.getLatestByPatientAndType(patient, readingType);
+        return latestByPatientAndType.stream().map(ReadingProjection::new).collect(Collectors.toList());
     }
 }
