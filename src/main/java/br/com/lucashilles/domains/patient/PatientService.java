@@ -1,10 +1,19 @@
 package br.com.lucashilles.domains.patient;
 
+import br.com.lucashilles.domains.reading.Reading;
+import br.com.lucashilles.domains.reading.ReadingService;
+
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @ApplicationScoped
 public class PatientService {
+
+    @Inject
+    ReadingService readingService;
 
     public Patient create(Patient patient) throws EntityExistsException {
         if (Patient.find("cpf = ?1", patient.cpf) == null) {
@@ -29,5 +38,13 @@ public class PatientService {
         }
 
         return Patient.getEntityManager().merge(patient);
+    }
+
+    public List<Reading> getPatientStatus(long patientId) {
+        if (Patient.findById(patientId) == null) {
+            throw new EntityNotFoundException();
+        }
+
+        return readingService.getPatientStatus(patientId);
     }
 }

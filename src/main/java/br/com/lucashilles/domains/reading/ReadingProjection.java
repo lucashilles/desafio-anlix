@@ -3,12 +3,15 @@ package br.com.lucashilles.domains.reading;
 import br.com.lucashilles.domains.patient.Patient;
 import br.com.lucashilles.domains.reading.readingtype.ReadingType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.quarkus.hibernate.orm.panache.common.ProjectedFieldName;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@RegisterForReflection
 public class ReadingProjection {
+
+    public long id;
 
     @JsonProperty("patient_id")
     @NotNull
@@ -24,11 +27,12 @@ public class ReadingProjection {
     @NotNull
     public double value;
 
-    public ReadingProjection(@ProjectedFieldName("patient.id") long patient, @ProjectedFieldName("readingType.id") long readingType, Date date, double value) {
-        this.patientId = patient;
-        this.readingTypeId = readingType;
-        this.date = date;
-        this.value = value;
+    public ReadingProjection(Reading reading) {
+        this.id = reading.id;
+        this.patientId = reading.patient.id;
+        this.readingTypeId = reading.readingType.id;
+        this.date = reading.date;
+        this.value = reading.value;
     }
 
     public Reading toEntity() {

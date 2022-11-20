@@ -99,4 +99,18 @@ public class ReadingService {
                 .setParameter("readingTypeId", readingTypeId)
                 .list();
     }
+
+    public List<Reading> getPatientStatus(Long patientId) {
+        String query = "SELECT" +
+                "     r.*  " +
+                " FROM public.sys_reading AS r" +
+                " JOIN (" +
+                "     SELECT MAX(gp.date) AS date, gp.reading_type_id" +
+                "     FROM public.sys_reading AS gp" +
+                "     WHERE gp.patient_id = :id" +
+                "     GROUP BY gp.reading_type_id" +
+                " ) AS gp ON r.date = gp.date AND r.reading_type_id = gp.reading_type_id";
+
+        return session.createNativeQuery(query, Reading.class).setParameter("id", patientId).list();
+    }
 }

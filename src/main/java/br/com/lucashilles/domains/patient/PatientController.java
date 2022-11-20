@@ -49,49 +49,13 @@ public class PatientController {
         return Patient.list("LOWER(name) LIKE ?1", "%" + name.toLowerCase() + "%");
     }
 
-//    @GET
-//    @Path("/{id}/status")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public List<ReadingDto> getLastReadings(@PathParam long id) {
-//        String query = "SELECT  " +
-//                "    r.*  " +
-//                "FROM public.sys_reading AS r  " +
-//                "JOIN (  " +
-//                "    SELECT MAX(gp.date) AS date, gp.reading_type_id  " +
-//                "    FROM public.sys_reading AS gp  " +
-//                "    WHERE gp.patient_id = :id  " +
-//                "    GROUP BY gp.reading_type_id  " +
-//                ") AS gp ON r.date = gp.date AND r.reading_type_id = gp.reading_type_id";
-//
-//        return session.createNativeQuery(query, Reading.class).setParameter("id", id).list();
-//    }
-
-//    @GET
-//    @Path("/{id}/last-readings")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public List<Reading> getLastReadings(@PathParam long id) {
-//        String query = "SELECT  " +
-//                "    r.*  " +
-//                "FROM public.sys_reading AS r  " +
-//                "JOIN (  " +
-//                "    SELECT MAX(gp.date) AS date, gp.reading_type_id  " +
-//                "    FROM public.sys_reading AS gp  " +
-//                "    WHERE gp.patient_id = :id  " +
-//                "    GROUP BY gp.reading_type_id  " +
-//                ") AS gp ON r.date = gp.date AND r.reading_type_id = gp.reading_type_id";
-//
-//        return session.createNativeQuery(query, Reading.class).setParameter("id", id).list();
-//    }
-
-
-//    SELECT *
-//    FROM sys_reading r
-//    JOIN (
-//      SELECT max(date) AS date, reading_type_id, patient_id
-//      FROM sys_reading
-//      GROUP BY patient_id, reading_type_id
-//    ) f
-//    ON r.date = f.date
-//    AND r.reading_type_id = f.reading_type_id
-//    AND r.patient_id = f.patient_id
+    @GET
+    @Path("/{id}/status")
+    public List<ReadingProjection> getPatientStatus(@Parameter(
+            description = "Number of records to be returned.",
+            required = true,
+            schema = @Schema(type = SchemaType.INTEGER)) @PathParam long id) {
+        List<Reading> patientStatus = patientService.getPatientStatus(id);
+        return patientStatus.stream().map(ReadingProjection::new).collect(Collectors.toList());
+    }
 }
