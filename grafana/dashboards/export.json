@@ -118,7 +118,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 20,
+        "h": 14,
         "w": 15,
         "x": 0,
         "y": 3
@@ -204,21 +204,10 @@
     "list": [
       {
         "current": {
-          "selected": true,
-          "text": [
-            "Alexandre Caleb Costa",
-            "André Gael Souza",
-            "Benedita Mirella Aurora Alves",
-            "Anthony Caio Hugo da Costa",
-            "Agatha Bruna da Rosa"
-          ],
-          "value": [
-            "Alexandre Caleb Costa",
-            "André Gael Souza",
-            "Benedita Mirella Aurora Alves",
-            "Anthony Caio Hugo da Costa",
-            "Agatha Bruna da Rosa"
-          ]
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
         },
         "datasource": {
           "type": "postgres",

@@ -25,14 +25,13 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 2,
-  "iteration": 1653788276432,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "datasource": {
         "type": "postgres",
-        "uid": "Postgres"
+        "uid": "P44368ADAD746BC27"
       },
       "description": "",
       "fieldConfig": {
@@ -40,41 +39,17 @@
           "color": {
             "mode": "palette-classic"
           },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "green",
                 "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           }
@@ -83,7 +58,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Leitura"
+              "options": "Índice Cardíaco"
             },
             "properties": [
               {
@@ -94,27 +69,46 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Índice Pulmonar"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 4,
+        "w": 16,
         "x": 0,
         "y": 0
       },
-      "id": 4,
+      "id": 16,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "textMode": "auto"
       },
+      "pluginVersion": "9.2.6",
       "targets": [
         {
           "datasource": {
@@ -123,126 +117,9 @@
           },
           "format": "time_series",
           "group": [],
-          "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  date AS \"time\",\n  value AS \"Leitura\"\nFROM sys_reading\nWHERE\n  $__timeFilter(date) AND\n  reading_type_id = 1 AND\n  patient_id = $id\nORDER BY 1",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "column"
-              },
-              {
-                "params": [
-                  "Leitura"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "table": "sys_reading",
-          "timeColumn": "date",
-          "timeColumnType": "timestamp",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
-                "reading_type_id",
-                "=",
-                "1"
-              ],
-              "type": "expression"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
-                "patient_id",
-                "=",
-                "$id"
-              ],
-              "type": "expression"
-            }
-          ]
-        }
-      ],
-      "title": "Índice Cardíaco",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "Postgres"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "dateTimeAsIso"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 12,
-        "y": 0
-      },
-      "id": 8,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "firstNotNull"
-          ],
-          "fields": "/^time$/",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.5.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "Postgres"
-          },
-          "format": "table",
-          "group": [
-            {
-              "params": [
-                "$__interval",
-                "none"
-              ],
-              "type": "time"
-            }
-          ],
-          "metricColumn": "none",
+          "metricColumn": "reading_type_id",
           "rawQuery": true,
-          "rawSql": "SELECT\n  date AS \"time\"\nFROM sys_reading\nWHERE\n  reading_type_id = 1 AND\n  patient_id = $id\norder by date desc",
+          "rawSql": "SELECT\n  r.date AS \"time\",\n  rt.name AS metric,\n  r.value\nFROM sys_reading r\nJOIN sys_reading_type rt ON r.reading_type_id = rt.id\nWHERE\n  $__timeFilter(r.date) AND\n  r.patient_id = $id\nORDER BY 1",
           "refId": "A",
           "select": [
             [
@@ -251,18 +128,6 @@
                   "value"
                 ],
                 "type": "column"
-              },
-              {
-                "params": [
-                  "max"
-                ],
-                "type": "aggregate"
-              },
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "alias"
               }
             ]
           ],
@@ -279,16 +144,6 @@
               "datatype": "int8",
               "name": "",
               "params": [
-                "reading_type_id",
-                "=",
-                "1"
-              ],
-              "type": "expression"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
                 "patient_id",
                 "=",
                 "$id"
@@ -298,140 +153,24 @@
           ]
         }
       ],
-      "title": "Última Leitura",
+      "title": "Últimos valores",
+      "transformations": [],
       "type": "stat"
     },
     {
       "datasource": {
         "type": "postgres",
-        "uid": "Postgres"
+        "uid": "P44368ADAD746BC27"
       },
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 12,
-        "y": 4
-      },
-      "id": 7,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "firstNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.5.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "Postgres"
-          },
-          "format": "table",
-          "group": [
-            {
-              "params": [
-                "$__interval",
-                "none"
-              ],
-              "type": "time"
-            }
-          ],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  value AS \"value\"\nFROM sys_reading\nWHERE\n  reading_type_id = 1 AND\n  patient_id = $id\norder by date desc",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "column"
-              },
-              {
-                "params": [
-                  "max"
-                ],
-                "type": "aggregate"
-              },
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "table": "sys_reading",
-          "timeColumn": "date",
-          "timeColumnType": "timestamp",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
-                "reading_type_id",
-                "=",
-                "1"
-              ],
-              "type": "expression"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
-                "patient_id",
-                "=",
-                "$id"
-              ],
-              "type": "expression"
-            }
-          ]
-        }
-      ],
-      "title": "Última Leitura",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "Postgres"
-      },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -449,8 +188,8 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
-            "spanNulls": false,
+            "showPoints": "always",
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -478,7 +217,22 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Leitura"
+              "options": "Índice Cardíaco"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Índice Pulmonar"
             },
             "properties": [
               {
@@ -494,16 +248,17 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 16,
         "x": 0,
-        "y": 8
+        "y": 4
       },
-      "id": 5,
+      "id": 15,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -518,9 +273,9 @@
           },
           "format": "time_series",
           "group": [],
-          "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  date AS \"time\",\n  value AS \"Leitura\"\nFROM sys_reading\nWHERE\n  $__timeFilter(date) AND\n  reading_type_id = 2 AND\n  patient_id = $id\nORDER BY 1",
+          "metricColumn": "reading_type_id",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  r.date AS \"time\",\n  rt.name AS metric,\n  r.value\nFROM sys_reading r\nJOIN sys_reading_type rt ON r.reading_type_id = rt.id\nWHERE\n  $__timeFilter(r.date) AND\n  r.patient_id = $id\nORDER BY 1",
           "refId": "A",
           "select": [
             [
@@ -529,12 +284,6 @@
                   "value"
                 ],
                 "type": "column"
-              },
-              {
-                "params": [
-                  "Leitura"
-                ],
-                "type": "alias"
               }
             ]
           ],
@@ -551,16 +300,6 @@
               "datatype": "int8",
               "name": "",
               "params": [
-                "reading_type_id",
-                "=",
-                "2"
-              ],
-              "type": "expression"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
                 "patient_id",
                 "=",
                 "$id"
@@ -570,251 +309,9 @@
           ]
         }
       ],
-      "title": "Índice Pulmonar",
+      "title": "Índices",
+      "transformations": [],
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "Postgres"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "dateTimeAsIso"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 12,
-        "y": 8
-      },
-      "id": 9,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "firstNotNull"
-          ],
-          "fields": "/^time$/",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.5.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "Postgres"
-          },
-          "format": "table",
-          "group": [
-            {
-              "params": [
-                "$__interval",
-                "none"
-              ],
-              "type": "time"
-            }
-          ],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  date AS \"time\"\nFROM sys_reading\nWHERE\n  reading_type_id = 2 AND\n  patient_id = $id\norder by date desc",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "column"
-              },
-              {
-                "params": [
-                  "max"
-                ],
-                "type": "aggregate"
-              },
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "table": "sys_reading",
-          "timeColumn": "date",
-          "timeColumnType": "timestamp",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
-                "reading_type_id",
-                "=",
-                "1"
-              ],
-              "type": "expression"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
-                "patient_id",
-                "=",
-                "$id"
-              ],
-              "type": "expression"
-            }
-          ]
-        }
-      ],
-      "title": "Última Leitura",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "Postgres"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 12,
-        "y": 12
-      },
-      "id": 10,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "firstNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.5.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "Postgres"
-          },
-          "format": "table",
-          "group": [
-            {
-              "params": [
-                "$__interval",
-                "none"
-              ],
-              "type": "time"
-            }
-          ],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  value AS \"value\"\nFROM sys_reading\nWHERE\n  reading_type_id = 2 AND\n  patient_id = $id\norder by date desc",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "column"
-              },
-              {
-                "params": [
-                  "max"
-                ],
-                "type": "aggregate"
-              },
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "table": "sys_reading",
-          "timeColumn": "date",
-          "timeColumnType": "timestamp",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
-                "reading_type_id",
-                "=",
-                "1"
-              ],
-              "type": "expression"
-            },
-            {
-              "datatype": "int8",
-              "name": "",
-              "params": [
-                "patient_id",
-                "=",
-                "$id"
-              ],
-              "type": "expression"
-            }
-          ]
-        }
-      ],
-      "title": "Última Leitura",
-      "type": "stat"
     },
     {
       "datasource": {
@@ -825,7 +322,7 @@
         "h": 3,
         "w": 16,
         "x": 0,
-        "y": 16
+        "y": 12
       },
       "id": 14,
       "options": {
@@ -837,7 +334,7 @@
         "showStarred": false,
         "tags": []
       },
-      "pluginVersion": "8.5.3",
+      "pluginVersion": "9.2.6",
       "title": "Atalhos",
       "type": "dashlist"
     }
