@@ -1,15 +1,12 @@
-package br.com.lucashilles.startup;
+package br.com.lucashilles.services;
 
 import br.com.lucashilles.domains.reading.readingtype.ReadingType;
-import br.com.lucashilles.services.PatientsIngestService;
-import br.com.lucashilles.services.ReadingsIngestService;
-import io.quarkus.runtime.StartupEvent;
+import io.quarkus.logging.Log;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.transaction.*;
+import javax.transaction.TransactionManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -43,17 +40,23 @@ public class DataIngestion {
     @Inject
     TransactionManager transactionManager;
 
-    public void ingestData(@Observes StartupEvent ev) {
+    public void ingestData() {
+        Log.info("Creating reading types");
         createReadingTypes();
 
+        Log.info("Importing patient data");
         importPatientData();
+        Log.info("Importing cardiac reading");
         importCardiacData();
+        Log.info("Importing pulmonary reading");
         importPulmonaryData();
     }
 
     private void createReadingTypes() {
         try {
-            transactionManager.begin();
+            if (transactionManager.getTransaction() == null) {
+                transactionManager.begin();
+            }
 
             ReadingType cardiacReading = new ReadingType();
             cardiacReading.name = "Índice Cardíaco";
