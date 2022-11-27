@@ -69,6 +69,19 @@ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 ![docker-status](img/docker-status.png)
 
+Inicialmente o banco de dados estará vazio, apenas com as tabelas criada, caso deseje popular com os dados 
+fornecidos com o desafio, execute o comando:
+
+```shell
+curl -X 'GET' \
+  'http://localhost:8080/api/common/populate' \
+  -H 'accept: */*'
+```
+
+Também é possível realizar esta tarefa pelo Swagger:
+
+![populate](img/populate.png)
+
 ### Rest API
 
 Teste os endpoints da API pelo swagger ou postman.
