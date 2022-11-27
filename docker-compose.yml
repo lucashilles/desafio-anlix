@@ -11,18 +11,22 @@ services:
       POSTGRES_DB: test_db
     ports:
       - "5432:5432"
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "5050:80"
   grafana:
     build: './grafana'
     restart: always
     container_name: grafana_container
     ports:
       - "3000:3000"
+  application:
+    build: ./
+    restart: always
+    container_name: application_container
+    healthcheck:
+      test: curl --fail -s http://localhost:8080/api/common/ping || exit 1
+      interval: 1m30s
+      timeout: 2s
+      retries: 1
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
