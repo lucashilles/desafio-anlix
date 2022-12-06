@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     container_name: pg_container
-    image: postgres
+    image: postgres:15.1
     restart: always
     environment:
       POSTGRES_USER: root
@@ -23,7 +23,7 @@ services:
     container_name: application_container
     healthcheck:
       test: curl --fail -s http://localhost:8080/api/common/ping || exit 1
-      interval: 1m30s
+      interval: 30s
       timeout: 2s
       retries: 1
     depends_on:
