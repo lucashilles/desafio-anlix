@@ -7,7 +7,10 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static br.com.lucashilles.domains.message.GenericMessage.*;
 
 @Path("/reading-type")
 @Produces(MediaType.APPLICATION_JSON)
@@ -19,8 +22,13 @@ public class ReadingTypeController {
     @DELETE
     @Path("/{id}")
     @Transactional
-    public void deleteReadingType(@PathParam long id) {
+    public Response deleteReadingType(@PathParam long id) {
+        if (id < 0) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ID_MUST_BE_POSITIVE).build();
+        }
         readingTypeService.delete(id);
+
+        return Response.ok().build();
     }
 
     @POST
@@ -49,8 +57,17 @@ public class ReadingTypeController {
 
     @GET
     @Path("/{id}")
-    public ReadingType getById(@PathParam long id) {
-        return ReadingType.findById(id);
+    public Response getById(@PathParam long id) {
+        if (id < 0) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ID_MUST_BE_POSITIVE).build();
+        }
+
+        ReadingType readingType = ReadingType.findById(id);
+        if (readingType == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity(ENTITY_NOT_FOUND).build();
+        }
+
+        return Response.ok(readingType).build();
     }
 
     @GET

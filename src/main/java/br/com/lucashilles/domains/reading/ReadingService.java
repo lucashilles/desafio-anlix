@@ -42,7 +42,7 @@ public class ReadingService {
         }
 
         if (parameters.get("from_date") != null && parameters.get("to_date") != null) {
-            whereQuery += "BETWEEN DATE(:from_date) AND DATE(:to_date) AND ";
+            whereQuery += "DATE(date) BETWEEN DATE(:from_date) AND DATE(:to_date) AND ";
         } else if (parameters.get("from_date") != null) {
             whereQuery += "DATE(date) >= DATE(:from_date) AND ";
         } else if (parameters.get("to_date") != null) {

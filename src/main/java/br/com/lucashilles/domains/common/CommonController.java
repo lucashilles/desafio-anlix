@@ -41,7 +41,7 @@ public class CommonController {
         } catch (Exception exception) {
             return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).build();
         }
-        return Response.ok().build();
+        return Response.ok("Successfully populated!").build();
     }
 
     @GET

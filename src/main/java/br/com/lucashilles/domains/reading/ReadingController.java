@@ -1,5 +1,6 @@
 package br.com.lucashilles.domains.reading;
 
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 
@@ -7,13 +8,19 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static br.com.lucashilles.domains.message.GenericMessage.*;
+
 @Path("/reading")
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "Reading",
+        description = "Endpoints of the Reading entity."
+)
 public class ReadingController {
 
     @Inject
@@ -22,12 +29,17 @@ public class ReadingController {
     @DELETE
     @Path("/{id}")
     @Transactional
-    public void deleteReading(@PathParam long id) {
+    public Response deleteReading(@PathParam long id) {
+        if (id < 0) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ID_MUST_BE_POSITIVE).build();
+        }
+
         readingService.delete(id);
+        return Response.ok().build();
     }
 
     @GET
-    public List<ReadingProjection> getReadings (
+    public Response getReadings (
             @QueryParam Long patient,
             @QueryParam("reading-type") Long readingType,
             @QueryParam("from-date")  Date fromDate,
@@ -35,7 +47,7 @@ public class ReadingController {
             @QueryParam Date date
     ) throws Exception {
         if (date != null && (fromDate != null || toDate != null)) {
-            throw new Exception("Date can only be use alone");
+            throw new Exception(USE_DATE_ALONE);
         }
         HashMap<String, Object> parameters = new HashMap<>();
 
@@ -59,8 +71,19 @@ public class ReadingController {
             parameters.put("date", date);
         }
 
+        boolean haveDateRange = fromDate != null && toDate != null;
+        if (haveDateRange && toDate.before(fromDate)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(INVALID_DATE_RANGE).build();
+        }
+
         List<Reading> readings = readingService.getWithParams(parameters);
-        return readings.stream().map(ReadingProjection::new).collect(Collectors.toList());
+
+        if (readings.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity(ENTITY_NOT_FOUND).build();
+        }
+
+        List<ReadingProjection> projectedList = readings.stream().map(ReadingProjection::new).collect(Collectors.toList());
+        return Response.ok(projectedList).build();
     }
 
     @POST
@@ -79,26 +102,46 @@ public class ReadingController {
 
     @GET
     @Path("/{id}")
-    public ReadingProjection getById(@PathParam long id) {
+    public Response getById(@PathParam long id) {
+        if (id < 0) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ID_MUST_BE_POSITIVE).build();
+        }
+
         Reading reading = Reading.findById(id);
-        return new ReadingProjection(reading);
+
+        if (reading == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity(ENTITY_NOT_FOUND).build();
+        }
+
+        return Response.ok(new ReadingProjection(reading)).build();
     }
 
     @GET
     @Path("/latest")
-    public List<ReadingProjection> getLatest(@QueryParam Long patient, @QueryParam("reading-type") Long readingType) {
+    public Response getLatest(@QueryParam Long patient, @QueryParam("reading-type") Long readingType) {
+        List<Reading> readings = null;
+
         if (patient == null && readingType == null) {
-            List<Reading> allLatest = readingService.getAllLatest();
-            return allLatest.stream().map(ReadingProjection::new).collect(Collectors.toList());
-        } if (readingType == null) {
-            List<Reading> allLatestByPatient = readingService.getAllLatestByPatient(patient);
-            return allLatestByPatient.stream().map(ReadingProjection::new).collect(Collectors.toList());
-        } if (patient == null) {
-            List<Reading> allLatestByType = readingService.getAllLatestByType(readingType);
-            return allLatestByType.stream().map(ReadingProjection::new).collect(Collectors.toList());
+            readings = readingService.getAllLatest();
+        } else if (readingType == null) {
+            readings = readingService.getAllLatestByPatient(patient);
+        } else if (patient == null) {
+            readings = readingService.getAllLatestByType(readingType);
+        }
+
+        if (readings == null || readings.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity(ENTITY_NOT_FOUND).build();
+        } else {
+            List<ReadingProjection> projectedReadings = readings.stream().map(ReadingProjection::new).collect(Collectors.toList());
+            Response.ok(projectedReadings);
         }
 
         List<Reading> latestByPatientAndType = readingService.getLatestByPatientAndType(patient, readingType);
-        return latestByPatientAndType.stream().map(ReadingProjection::new).collect(Collectors.toList());
+        if (latestByPatientAndType.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity(ENTITY_NOT_FOUND).build();
+        }
+
+        List<ReadingProjection> projections = latestByPatientAndType.stream().map(ReadingProjection::new).collect(Collectors.toList());
+        return Response.ok(projections).build();
     }
 }
